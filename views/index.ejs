@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en" data-bs-theme="light">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Home</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      transition: background-color 0.3s ease, color 0.3s ease;
+    }
+
+    .navbar-brand {
+      font-weight: bold;
+      font-size: 1.5rem;
+    }
+
+    .card {
+      height: 250px;
+      border: none;
+      border-radius: 1rem;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .card:hover {
+      transform: scale(1.02);
+      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
+    }
+
+    .card-img-top {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      border-radius: 1rem 1rem 0 0;
+    }
+
+    .custom-view-btn {
+      background: linear-gradient(135deg, #6f42c1, #007bff);
+      color: #fff;
+      padding: 10px 24px;
+      border-radius: 50px;
+      font-weight: bold;
+      border: none;
+      box-shadow: 0 4px 15px rgba(0, 123, 255, 0.3);
+      transition: all 0.3s ease;
+      text-decoration: none;
+      font-size: 16px;
+    }
+
+    .custom-view-btn:hover {
+      background: linear-gradient(135deg, #007bff, #6f42c1);
+      box-shadow: 0 6px 20px rgba(0, 123, 255, 0.5);
+      transform: scale(1.08);
+      color: #fff;
+    }
+  </style>
+</head>
+<body>
+  <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+    <div class="container-fluid">
+      <a class="navbar-brand" href="/">AnimeBlog</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown"
+        aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+
+      <div class="collapse navbar-collapse" id="navbarNavDropdown">
+        <ul class="navbar-nav me-auto">
+          <li class="nav-item">
+            <a class="nav-link active" href="/">Home</a>
+          </li>
+          <% if (locals.user) { %>
+            <li class="nav-item">
+              <a class="nav-link" href="/blog/new-blog">Add Blog</a>
+            </li>
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                User
+              </a>
+              <ul class="dropdown-menu dropdown-menu-dark">
+                <li><a class="dropdown-item" href="/logout">Logout</a></li>
+              </ul>
+            </li>
+          <% } else { %>
+            <li class="nav-item">
+              <a class="nav-link" href="/signup">Create Account</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="/signin">Signin</a>
+            </li>
+          <% } %>
+        </ul>
+
+        <!-- Dark mode toggle button -->
+        <button id="darkModeToggle" class="btn btn-outline-light">🌙 Dark Mode</button>
+      </div>
+    </div>
+  </nav>
+
+  <div class="container mt-4">
+    <div class="row">
+      <% blog.forEach((element) => { %>
+        <div class="col-md-3 mb-4 d-flex flex-column align-items-center">
+          <div class="card w-100 overflow-hidden">
+            <img src="<%= element.coverImage %>" class="card-img-top" alt="Anime Image" />
+          </div>
+          <a href="/blog/<%= element._id %>" class="btn custom-view-btn mt-2">👁️ View</a>
+        </div>
+      <% }) %>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <script>
+    const toggleBtn = document.getElementById('darkModeToggle');
+
+    function updateButtonText() {
+      if (document.documentElement.getAttribute('data-bs-theme') === 'dark') {
+        toggleBtn.textContent = '☀️ Light Mode';
+      } else {
+        toggleBtn.textContent = '🌙 Dark Mode';
+      }
+    }
+
+    toggleBtn?.addEventListener('click', () => {
+      const currentTheme = document.documentElement.getAttribute('data-bs-theme');
+      const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+      document.documentElement.setAttribute('data-bs-theme', newTheme);
+      localStorage.setItem('theme', newTheme);
+      updateButtonText();
+    });
+
+    window.addEventListener('DOMContentLoaded', () => {
+      if (!localStorage.getItem('theme')) {
+        localStorage.setItem('theme', 'light');
+      }
+      document.documentElement.setAttribute('data-bs-theme', localStorage.getItem('theme'));
+      updateButtonText();
+    });
+  </script>
+</body>
+</html>

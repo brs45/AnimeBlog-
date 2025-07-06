@@ -1,0 +1,170 @@
+<nav id="navbar" class="navbar navbar-expand-lg navbar-dark bg-gradient">
+  <div class="container-fluid">
+    <a class="navbar-brand fw-bold" href="#" style="font-size: 1.8rem;">AnimeBlog</a>
+
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+      data-bs-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false"
+      aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="navbarNavDropdown">
+      <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+        <li class="nav-item">
+          <a class="nav-link fw-semibold" href="/">Home</a>
+        </li>
+
+        <% if (locals.user) { %>
+          <li class="nav-item">
+            <a class="nav-link fw-semibold" href="/blog/new-blog">Add Blog</a>
+          </li>
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle fw-semibold" href="#" role="button" data-bs-toggle="dropdown"
+              aria-expanded="false">
+              <%= user.name %>
+            </a>
+            <ul class="dropdown-menu dropdown-menu-end dropdown-menu-dark">
+              <li><a class="dropdown-item" href="/logout">Logout</a></li>
+            </ul>
+          </li>
+        <% } else { %>
+          <li class="nav-item">
+            <a class="nav-link fw-semibold" href="/signup">Create Account</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link fw-semibold" href="/signin">Signin</a>
+          </li>
+        <% } %>
+      </ul>
+
+      <button id="darkModeToggle" class="btn btn-dark-mode-toggle ms-lg-3 mt-2 mt-lg-0">
+        🌙 Dark Mode
+      </button>
+    </div>
+  </div>
+</nav>
+
+<style>
+  .bg-gradient {
+    background: linear-gradient(135deg, #6f42c1, #007bff);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+  }
+
+  .bg-gradient-light {
+    background: linear-gradient(135deg, #ffffff, #f8f9fa);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  }
+
+  .navbar .nav-link,
+  .navbar .navbar-brand {
+    color: #fff !important;
+    transition: color 0.3s ease;
+  }
+
+  .navbar .nav-link:hover {
+    color: #e0e0e0 !important;
+  }
+
+  .navbar-nav .nav-link:hover::after {
+    content: '';
+    display: block;
+    width: 100%;
+    height: 2px;
+    background-color: #fff;
+    position: absolute;
+    bottom: -5px;
+    left: 0;
+  }
+
+  .btn-dark-mode-toggle {
+    background: linear-gradient(135deg, #6f42c1, #007bff);
+    color: #fff;
+    padding: 8px 18px;
+    border-radius: 30px;
+    font-weight: 600;
+    border: none;
+    box-shadow: 0 4px 12px rgba(0, 123, 255, 0.3);
+    transition: all 0.3s ease;
+    font-size: 0.95rem;
+  }
+
+  .btn-dark-mode-toggle:hover {
+    background: linear-gradient(135deg, #007bff, #6f42c1);
+    box-shadow: 0 6px 20px rgba(0, 123, 255, 0.5);
+    transform: scale(1.05);
+  }
+
+  /* Dark mode styles */
+  body.dark-mode .bg-gradient {
+    background: linear-gradient(135deg, #1f1f1f, #333333) !important;
+    box-shadow: 0 4px 15px rgba(255, 255, 255, 0.05);
+  }
+
+  body.dark-mode .navbar .nav-link,
+  body.dark-mode .navbar .navbar-brand {
+    color: #eee !important;
+  }
+
+  body.dark-mode .navbar .nav-link:hover {
+    color: #fff !important;
+  }
+
+  body.dark-mode .dropdown-menu-dark .dropdown-item:hover {
+    background-color: #444;
+  }
+
+  /* Light mode text handling */
+  body.light-mode .navbar .nav-link,
+  body.light-mode .navbar .navbar-brand {
+    color: #333 !important;
+  }
+
+  body.light-mode .navbar .nav-link:hover {
+    color: #000 !important;
+  }
+
+  body.light-mode .dropdown-menu-dark .dropdown-item:hover {
+    background-color: #e2e6ea;
+  }
+
+  /* Smooth transition */
+  body, .navbar {
+    transition: background 0.4s ease, color 0.4s ease;
+  }
+</style>
+
+<script>
+  const toggleBtn = document.getElementById('darkModeToggle');
+  const navbar = document.getElementById('navbar');
+
+  function updateModeClass() {
+    const isDark = document.body.classList.contains('dark-mode');
+    toggleBtn.textContent = isDark ? '☀️ Light Mode' : '🌙 Dark Mode';
+
+    if (isDark) {
+      navbar.classList.remove('bg-gradient-light', 'navbar-light');
+      navbar.classList.add('bg-gradient', 'navbar-dark');
+    } else {
+      navbar.classList.remove('bg-gradient', 'navbar-dark');
+      navbar.classList.add('bg-gradient-light', 'navbar-light');
+    }
+  }
+
+  toggleBtn.addEventListener('click', () => {
+    document.body.classList.toggle('dark-mode');
+    document.body.classList.toggle('light-mode');
+    localStorage.setItem('theme', document.body.classList.contains('dark-mode') ? 'dark' : 'light');
+    updateModeClass();
+  });
+
+  window.addEventListener('DOMContentLoaded', () => {
+    const theme = localStorage.getItem('theme');
+    if (theme === 'dark') {
+      document.body.classList.add('dark-mode');
+    } else {
+      document.body.classList.add('light-mode');
+    }
+    updateModeClass();
+  });
+</script>
+

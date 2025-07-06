@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en" data-bs-theme="light">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <%- include('./partials/head') %>
+  <title>New Blog Post - Anime</title>
+
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #f8f9fa;
+      transition: background-color 0.3s ease, color 0.3s ease;
+    }
+
+    body.dark-mode {
+      background-color: #121212;
+      color: #e0e0e0;
+    }
+
+    .form-wrapper {
+      max-width: 600px;
+      margin: 80px auto;
+      padding: 40px;
+      background-color: #ffffff;
+      border-radius: 10px;
+      box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+    }
+
+    body.dark-mode .form-wrapper {
+      background-color: #1e1e1e;
+      box-shadow: 0 2px 12px rgba(255, 255, 255, 0.05);
+    }
+
+    h2 {
+      font-weight: 600;
+      margin-bottom: 25px;
+      text-align: center;
+      color: inherit;
+    }
+
+    .form-label {
+      font-weight: 500;
+    }
+
+    .form-control {
+      border-radius: 6px;
+      padding: 10px 12px;
+      font-size: 15px;
+    }
+
+    .btn-primary {
+      width: 100%;
+      padding: 10px;
+      font-weight: 600;
+      font-size: 16px;
+      border-radius: 6px;
+      background: linear-gradient(135deg, #6f42c1, #007bff);
+      border: none;
+    }
+
+    .btn-primary:hover {
+      background: linear-gradient(135deg, #007bff, #6f42c1);
+    }
+
+    body.dark-mode input,
+    body.dark-mode textarea,
+    body.dark-mode button {
+      background-color: #2c2c2c !important;
+      color: #eee !important;
+      border: 1px solid #444 !important;
+    }
+
+    @media (max-width: 576px) {
+      .form-wrapper {
+        margin: 30px 15px;
+        padding: 30px 20px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <%- include('./partials/nav') %>
+
+  <div class="form-wrapper">
+    <h2>Post a New Anime Blog</h2>
+    <form action="/blog" method="POST" enctype="multipart/form-data">
+      <div class="mb-3">
+        <label for="formFileLg" class="form-label">Upload Anime Image</label>
+        <input class="form-control form-control-lg" id="formFileLg" name="animeImage" type="file" />
+      </div>
+      <div class="mb-3">
+        <label for="exampleFormControlInput1" class="form-label">Anime Title</label>
+        <input type="text" class="form-control" id="exampleFormControlInput1" name="animeTitle" required />
+      </div>
+      <div class="mb-3">
+        <label for="exampleFormControlTextarea1" class="form-label">Your Thoughts</label>
+        <textarea class="form-control" id="exampleFormControlTextarea1" name="animeComment" rows="4" required></textarea>
+      </div>
+      <button type="submit" class="btn btn-primary">Submit Blog</button>
+    </form>
+  </div>
+
+  <%- include('./partials/link') %>
+
+  <script>
+    (() => {
+      const storedTheme = localStorage.getItem('theme') || 'light';
+      if (storedTheme === 'dark') {
+        document.body.classList.add('dark-mode');
+      }
+      document.documentElement.setAttribute('data-bs-theme', storedTheme);
+    })();
+
+    document.addEventListener('DOMContentLoaded', () => {
+      const toggleBtn = document.getElementById('darkModeToggle');
+      if (toggleBtn) {
+        toggleBtn.textContent = localStorage.getItem('theme') === 'dark' ? '☀️ Light Mode' : '🌙 Dark Mode';
+
+        toggleBtn.addEventListener('click', () => {
+          const currentTheme = document.documentElement.getAttribute('data-bs-theme');
+          const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+          document.documentElement.setAttribute('data-bs-theme', newTheme);
+          document.body.classList.toggle('dark-mode', newTheme === 'dark');
+          localStorage.setItem('theme', newTheme);
+          toggleBtn.textContent = newTheme === 'dark' ? '☀️ Light Mode' : '🌙 Dark Mode';
+        });
+      }
+    });
+  </script>
+</body>
+</html>
